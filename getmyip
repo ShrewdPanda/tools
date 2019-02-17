@@ -1,0 +1,30 @@
+#!/bin/bash
+
+html=`curl -s https://www.whatismypublicip.com`;
+ipaddr=`echo $html | grep -Po '(\d+\.+\d+\.+\d+\.+\d+)'`;
+
+latlong=`echo $html | grep -Po '<td>\K(.*\d+\.+\d+)' | awk '{printf "%s,", $0} END {print ""}'`;
+
+lat=`echo $latlong | awk '{split($0, a, ","); print a[1]}' | grep -o '.\{9\}$' | sed 's/=//g'`
+long=`echo $latlong | awk '{split($0, a, ","); print a[2]}'`
+
+long=${long::9}
+long=`echo $long | sed 's/&//g'`
+
+country=`echo $html | grep -Po '(?<=Country:).*?(?=</tr>)' | awk '{split($0,a,"<td>"); print a[2]}'`;
+country=`echo $country | awk '{split($0,a,"<td"); print a[1]}'`;
+country=${country::-6}
+
+region=`echo $html | grep -Po '(?<=Region:).*?(?=</tr>)' | awk '{split($0,a,"<td>"); print a[2]}'`;
+region=${region::-6}
+
+city=`echo $html | grep -Po '(?<=City:).*?(?=</tr>)' | awk '{split($0,a,"<td>"); print a[2]}'`;
+city=${city::-6};
+
+printf "\n\nIP:\t"; echo $ipaddr;
+printf "Country: "; echo $country;
+printf "Region:\t"; echo $region;
+printf "City:\t"; echo $city;
+printf "Lat:\t"; echo $lat;
+printf "Long:\t"; echo $long;
+

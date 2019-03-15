@@ -6,6 +6,11 @@
 #   MIT License, 2019   #
 #########################
 
+###################################################
+# Usage: ./getmyip                                #
+# Add parent file to PATH for immediate execution # 
+###################################################
+
 
 html=`curl -s https://www.whatismypublicip.com`;
 ipaddr=`echo $html | grep -Po '(\d+\.+\d+\.+\d+\.+\d+)'`;
